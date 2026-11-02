@@ -160,6 +160,7 @@ if(authSubmitBtn) {
                     // Refresh Wallet Data on Login
                     currentVaultUser = username;
                     loadWallet();
+                    loadSubscriptions();
                 }, 800); // Slight delay for visual effect
             } else {
                 alertModal.classList.add('hidden');
