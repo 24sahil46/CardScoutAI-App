@@ -6,3 +6,5 @@ tavily-python
 supabase
 fpdf2
 python-dotenv
+psycopg2-binary
+psycopg2
