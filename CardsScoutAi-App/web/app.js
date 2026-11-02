@@ -133,7 +133,7 @@ if(authSubmitBtn) {
         }
         
         try {
-            const endpoint = isRegister ? 'http://localhost:8000/api/register' : 'http://localhost:8000/api/login';
+            const endpoint = isRegister ? 'https://cardscoutai-app.onrender.com/api/register' : 'https://cardscoutai-app.onrender.com/api/login';
             
             const response = await fetch(endpoint, {
                 method: 'POST',
