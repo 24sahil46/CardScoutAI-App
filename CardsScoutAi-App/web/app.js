@@ -127,9 +127,9 @@ if(authSubmitBtn) {
         }
 
         if (isRegister) {
-            showCustomAlert("Authenticating...", "Executing PBKDF2-HMAC-SHA256 hash derivation and generating secure Vault profile...", "🔒");
+            showCustomAlert("Authenticating...", "Generating secure Vault profile...", "🔒");
         } else {
-            showCustomAlert("Authenticating...", "Retrieving cryptographic salt and verifying Commander credentials...", "🔒");
+            showCustomAlert("Authenticating...", "Verifying Commander credentials...", "🔒");
         }
         
         try {
