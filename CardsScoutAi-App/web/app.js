@@ -265,7 +265,7 @@ if(addSubBtn) {
         }
 
         try {
-            const response = await fetch('[https://cardscoutai-app.onrender.com/api/subscriptions/add](https://cardscoutai-app.onrender.com/api/subscriptions/add)', {
+            const response = await fetch('https://cardscoutai-app.onrender.com/api/subscriptions/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, service_name: serviceName, monthly_cost: monthlyCost, card_used: cardUsed })
