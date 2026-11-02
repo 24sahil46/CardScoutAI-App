@@ -388,97 +388,91 @@ async def export_pdf(request: Request):
     try:
         data = await request.json()
         
+        # Using fpdf2
+        from fpdf import FPDF
+        import re
+        import tempfile
+        from fastapi.responses import FileResponse
+        
         pdf = FPDF()
         pdf.add_page()
         
-        import re
-        import textwrap
+        # fpdf2 handles text wrapping natively! We just need to strip HTML 
+        # and replace the Rupee symbol (default PDF fonts don't have ₹)
+        def clean_text(text):
+            if not text: return ""
+            text = re.sub(r'<[^>]+>', ' ', str(text)) # Strip HTML
+            text = re.sub(r'\s+', ' ', text).strip()  # Remove extra spaces
+            return text.replace("₹", "Rs. ")
 
-        # TANK-ARMORED SANITIZER (Bypasses FPDF wrapping completely)
-        def sanitize(text, max_width=95):
-            if not text: 
-                return ""
-            text = str(text)
-            
-            # Clean HTML and formatting
-            text = re.sub(r'<[^>]+>', ' ', text)
-            text = text.replace("₹", "Rs. ").replace("—", "-").replace("–", "-")
-            text = text.replace("“", '"').replace("”", '"').replace("‘", "'").replace("’", "'")
-            text = text.encode('ascii', 'ignore').decode('ascii')
-            text = re.sub(r'\s+', ' ', text).strip()
-            
-            # Force Python to break the lines so FPDF doesn't have to guess and crash
-            return '\n'.join(textwrap.wrap(text, width=max_width, break_long_words=True))
+        user_name = clean_text(data.get('name', 'User'))
 
         # --- TITLE ---
         pdf.set_font("helvetica", "B", 18)
-        pdf.multi_cell(0, 10, "CardScout AI: Strategic Card Roadmap")
-        pdf.ln(2)
+        pdf.cell(0, 10, "CardScout AI: Strategic Card Roadmap", new_x="LMARGIN", new_y="NEXT", align="C")
+        pdf.ln(5)
         
         pdf.set_font("helvetica", "B", 12)
         pdf.set_text_color(100, 100, 100)
-        user_name = sanitize(data.get('name', 'User'), 50).replace('\n', '')
-        pdf.multi_cell(0, 8, f"Personalized Yield & Optimization Report for {user_name}")
-        pdf.ln(5)
+        pdf.cell(0, 8, f"Personalized Yield & Optimization Report for {user_name}", new_x="LMARGIN", new_y="NEXT")
+        pdf.ln(2)
         
         # --- NARRATIVE ---
         pdf.set_text_color(0, 0, 0)
         pdf.set_font("helvetica", "", 10)
-        narrative_clean = sanitize(data.get("narrative", ""), 100)
+        narrative_clean = clean_text(data.get("narrative", ""))
         pdf.multi_cell(0, 6, narrative_clean)
         pdf.ln(10)
         
         # --- TOP 5 PODIUM ---
         pdf.set_font("helvetica", "B", 14)
-        pdf.multi_cell(0, 10, "1. Top 5 Podium Recommendations")
+        pdf.cell(0, 10, "1. Top 5 Podium Recommendations", new_x="LMARGIN", new_y="NEXT")
         pdf.ln(2)
         
         cards = data.get("cards", [])
         for i, c in enumerate(cards):
+            if not c: continue
+            
             pdf.set_font("helvetica", "B", 11)
-            card_name = sanitize(c.get('name', 'Card'), 80).replace('\n', '')
-            pdf.multi_cell(0, 8, f"{i+1}. {card_name}")
+            card_name = clean_text(c.get('name', 'Card'))
+            pdf.cell(0, 8, f"{i+1}. {card_name}", new_x="LMARGIN", new_y="NEXT")
             
             pdf.set_font("helvetica", "", 9)
-            sub = c.get('sub', '')
-            why = c.get('why', '')
-            fee = c.get('fee', '')
+            sub = clean_text(c.get('sub', ''))
+            why = clean_text(c.get('why', ''))
+            fee = clean_text(c.get('fee', ''))
             
             details = f"Card Type: {sub} | Primary Benefit: {why} | Annual Fee: {fee}"
-            # Sanitize the full combined string
-            details_clean = sanitize(details, 105)
-            pdf.multi_cell(0, 5, details_clean)
+            pdf.multi_cell(0, 5, details)
             pdf.ln(4)
             
         # --- DETAILED BREAKDOWN ---
         pdf.ln(5)
         pdf.set_font("helvetica", "B", 12)
-        pdf.multi_cell(0, 10, "Detailed Card Breakdown:")
+        pdf.cell(0, 10, "Detailed Card Breakdown:", new_x="LMARGIN", new_y="NEXT")
         pdf.ln(2)
         
         for i, c in enumerate(cards):
+            if not c: continue
+            
             pdf.set_font("helvetica", "B", 11)
-            card_name = sanitize(c.get('name', 'Card'), 80).replace('\n', '')
-            pdf.multi_cell(0, 8, f"{i+1}. {card_name}")
+            card_name = clean_text(c.get('name', 'Card'))
+            pdf.cell(0, 8, f"{i+1}. {card_name}", new_x="LMARGIN", new_y="NEXT")
             
             pdf.set_font("helvetica", "", 9)
-            reward = sanitize(c.get('reward_desc', ''), 100)
-            why = sanitize(c.get('why', ''), 100)
+            reward = clean_text(c.get('reward_desc', ''))
+            why = clean_text(c.get('why', ''))
             
             pdf.multi_cell(0, 5, f"* Rewards & Benefits:\n{reward}")
             pdf.multi_cell(0, 5, f"* Why it fits you:\n{why}")
             pdf.ln(6)
             
-        import tempfile
-        from fastapi.responses import FileResponse
         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
         pdf.output(temp_file.name)
         
-        # Strip spaces from filename
         safe_filename = user_name.replace(" ", "_")
         return FileResponse(temp_file.name, media_type="application/pdf", filename=f"CardScout_{safe_filename}.pdf")
 
     except Exception as e:
         print("PDF Error:", str(e))
-        from fastapi import HTTPException
         raise HTTPException(status_code=500, detail=str(e))
