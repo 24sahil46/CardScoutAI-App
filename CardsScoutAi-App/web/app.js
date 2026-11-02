@@ -662,7 +662,18 @@ if(submitBtn) {
             occ = parts[parts.length - 1].trim(); 
         }
         let totalSpend = 0; 
-        document.querySelectorAll('.step-val span').forEach(span => totalSpend += parseInt(span.textContent));
+        document.querySelectorAll('#expense-blueprint-view .step-val input').forEach(input => {
+            totalSpend += parseInt(input.value) || 0;
+        });
+        const activeBanks = Array.from(document.querySelectorAll('.bank-box.active')).map(box => {
+            const parts = box.innerText.trim().split('\n');
+            return parts[parts.length - 1].trim();
+        });
+        const bankText = activeBanks.length > 0 ? activeBanks[0] + (activeBanks.length > 1 ? ` (+${activeBanks.length - 1})` : "") : "None Selected";
+
+        const activeRewards = Array.from(document.querySelectorAll('.reward-box.active')).map(box => box.querySelector('h4').innerText.trim());
+        const primaryReward = activeRewards.length > 0 ? activeRewards[0] : "General Rewards";
+        const subReward = activeRewards.length > 1 ? `+${activeRewards.length - 1} more selected` : "Selected";
 
         // RENDER FUNCTION (Used by both API Success and Demo Fallback)
         const renderIntelligenceHub = (narrativeText) => {
@@ -684,8 +695,8 @@ if(submitBtn) {
                     <div><span class="lbl">💵 NET INCOME</span><div class="val text-green">₹${parseInt(income).toLocaleString('en-IN')}/mo</div><div class="sub">Verified</div></div>
                     <div><span class="lbl">🎯 CREDIT STANDING</span><div class="val text-green">${credit}</div><div class="sub">Tier</div></div>
                     <div><span class="lbl">📈 MONTHLY SPEND</span><div class="val">₹${totalSpend.toLocaleString('en-IN')}</div><div class="sub">₹${((totalSpend*12)/100000).toFixed(1)}L / yr</div></div>
-                    <div><span class="lbl">🏦 BANKING REL.</span><div class="val">HDFC Bank</div><div class="sub">Limit: Active</div></div>
-                    <div><span class="lbl">🏆 PRIORITY GOALS</span><div class="val text-orange">Premium Rewards</div><div class="sub">Selected</div></div>
+                    <div><span class="lbl">🏦 BANKING REL.</span><div class="val" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${bankText}</div><div class="sub">Active Profile</div></div>
+                    <div><span class="lbl">🏆 PRIORITY GOALS</span><div class="val text-orange" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${primaryReward}</div><div class="sub">${subReward}</div></div>
                 `;
             }
 
