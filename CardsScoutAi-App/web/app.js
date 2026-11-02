@@ -218,7 +218,7 @@ async function loadSubscriptions() {
     if (!username) return;
 
     try {
-        const response = await fetch(`http://localhost:8000/api/subscriptions/${username}`);
+        const response = await fetch(`https://cardscoutai-app.onrender.com/api/subscriptions/${username}`);
         const data = await response.json();
         
         if (response.ok && data.status === 'success') {
@@ -265,7 +265,7 @@ if(addSubBtn) {
         }
 
         try {
-            const response = await fetch('http://localhost:8000/api/subscriptions/add', {
+            const response = await fetch('[https://cardscoutai-app.onrender.com/api/subscriptions/add](https://cardscoutai-app.onrender.com/api/subscriptions/add)', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, service_name: serviceName, monthly_cost: monthlyCost, card_used: cardUsed })
@@ -284,7 +284,7 @@ if(addSubBtn) {
 window.removeSubscription = async function(serviceName, cardUsed) {
     const username = localStorage.getItem("commanderID");
     try {
-        const response = await fetch('http://localhost:8000/api/subscriptions/remove', {
+        const response = await fetch('[https://cardscoutai-app.onrender.com/api/subscriptions/remove](https://cardscoutai-app.onrender.com/api/subscriptions/remove)', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, service_name: serviceName, card_used: cardUsed })
@@ -558,7 +558,7 @@ document.getElementById('start-battle-btn')?.addEventListener('click', async () 
     const topPick = (aiCardsData && aiCardsData[0]) ? aiCardsData[0].name : "Our Top Recommended Card";
 
     try {
-        const response = await fetch('http://localhost:8000/api/engine/battleground', {
+        const response = await fetch('[https://cardscoutai-app.onrender.com/api/engine/battleground](https://cardscoutai-app.onrender.com/api/engine/battleground)', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -690,7 +690,7 @@ if(submitBtn) {
             // Extended timeout to 12 seconds to allow Gemini to generate all 5 cards
             const timeoutId = setTimeout(() => controller.abort(), 25000);
 
-            const response = await fetch('http://localhost:8000/api/generate-roadmap', {
+            const response = await fetch('[https://cardscoutai-app.onrender.com/api/generate-roadmap](https://cardscoutai-app.onrender.com/api/generate-roadmap)', {
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, age, occ: "Professional", income, credit }),
@@ -780,7 +780,7 @@ if (trackWaiverBtn) {
         trackWaiverBtn.textContent = "Consulting AI...";
         
         try {
-            const response = await fetch('http://localhost:8000/api/engine/fee-waiver', {
+            const response = await fetch('[https://cardscoutai-app.onrender.com/api/engine/fee-waiver](https://cardscoutai-app.onrender.com/api/engine/fee-waiver)', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ card_name: cardName })
@@ -896,7 +896,7 @@ if (engine7Tab) {
         const penaltyContainer = document.querySelector('#engine-7 .grid-template-columns');
         
         try {
-            const response = await fetch('http://localhost:8000/api/engine/penalties', {
+            const response = await fetch('[https://cardscoutai-app.onrender.com/api/engine/penalties](https://cardscoutai-app.onrender.com/api/engine/penalties)', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ card_name: cardName })
@@ -926,7 +926,7 @@ if (engine7Tab) {
 }
 
 // --- DYNAMIC WALLET API SYNC (BLUEPRINT IMPLEMENTATION) ---
-const API_BASE = 'http://localhost:8000/api/wallet';
+const API_BASE = '[https://cardscoutai-app.onrender.com/api/wallet](https://cardscoutai-app.onrender.com/api/wallet)';
 const limitDisplay = document.getElementById('new-card-limit');
 const cardNameInput = document.getElementById('new-card-name');
 const walletGrid = document.getElementById('wallet-grid');
@@ -1102,7 +1102,7 @@ document.getElementById('track-waiver-btn')?.addEventListener('click', async (e)
     
     btn.textContent = "Fetching...";
     try {
-        const res = await fetch('http://localhost:8000/api/engine/fee-waiver', {
+        const res = await fetch('[https://cardscoutai-app.onrender.com/api/engine/fee-waiver](https://cardscoutai-app.onrender.com/api/engine/fee-waiver)', {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ card_name: cardSelect.value })
         });
@@ -1126,7 +1126,7 @@ document.getElementById('run-audit-btn')?.addEventListener('click', async (e) =>
     
     btn.textContent = "Auditing Terms...";
     try {
-        const res = await fetch('http://localhost:8000/api/engine/penalty', {
+        const res = await fetch('[https://cardscoutai-app.onrender.com/api/engine/penalty](https://cardscoutai-app.onrender.com/api/engine/penalty)', {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ card_name: cardSelect.value })
         });
@@ -1160,7 +1160,7 @@ document.getElementById('scan-offers-btn')?.addEventListener('click', async (e) 
     
     btn.textContent = "Scanning Web...";
     try {
-        const res = await fetch('http://localhost:8000/api/engine/live-offers', {
+        const res = await fetch('[https://cardscoutai-app.onrender.com/api/engine/live-offers](https://cardscoutai-app.onrender.com/api/engine/live-offers)', {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ card_name: cardSelect.value })
         });
@@ -1182,7 +1182,7 @@ document.getElementById('check-milestones-btn')?.addEventListener('click', async
     
     btn.textContent = "Checking...";
     try {
-        const res = await fetch('http://localhost:8000/api/engine/milestones', {
+        const res = await fetch('[https://cardscoutai-app.onrender.com/api/engine/milestones](https://cardscoutai-app.onrender.com/api/engine/milestones)', {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ card_name: cardSelect.value })
         });
@@ -1333,7 +1333,7 @@ document.getElementById('calc-forex-btn')?.addEventListener('click', async (e) =
     await fetchLiveExchangeRates();
     
     try {
-        const res = await fetch('http://localhost:8000/api/engine/forex', {
+        const res = await fetch('[https://cardscoutai-app.onrender.com/api/engine/forex](https://cardscoutai-app.onrender.com/api/engine/forex)', {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ card_name: cardSelect.value })
         });
@@ -1418,7 +1418,7 @@ async function handleCopilotQuery(description, amount) {
 
     // 5. Send to Backend
     try {
-        const res = await fetch('http://localhost:8000/api/engine/copilot-chat', {
+        const res = await fetch('[https://cardscoutai-app.onrender.com/api/engine/copilot-chat](https://cardscoutai-app.onrender.com/api/engine/copilot-chat)', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description, amount, wallet_matrix: walletMatrix })
@@ -1563,7 +1563,7 @@ document.getElementById('eval-points-btn')?.addEventListener('click', async (e) 
     
     btn.textContent = "Analyzing Redemptions...";
     try {
-        const res = await fetch('http://localhost:8000/api/engine/points', {
+        const res = await fetch('[https://cardscoutai-app.onrender.com/api/engine/points](https://cardscoutai-app.onrender.com/api/engine/points)', {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ card_name: cardSelect.value })
         });
@@ -1757,7 +1757,7 @@ document.querySelector('.export-btn')?.addEventListener('click', async function(
             cards: aiCardsData 
         };
 
-        const response = await fetch('http://localhost:8000/api/export-pdf', {
+        const response = await fetch('https://cardscoutai-app.onrender.com/api/export-pdf', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
