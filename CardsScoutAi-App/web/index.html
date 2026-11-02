@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardScout</title>
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🕵️ Card<span class="text-green">Scout</span></div>
+        <div class="nav-links">
+            <button id="home-btn" class="nav-btn active">Home</button>
+            <button id="vault-nav-btn" class="nav-btn">Vault</button>
+            <button type="button" id="copilot-nav-btn" class="nav-btn">Ask CardScout AI</button>
+        </div>
+    </nav>
+
+    <!-- LOADING SCREEN -->
+    <div id="loading-view" class="hidden" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; width: 100%; z-index: 10;">
+        <div class="card" style="text-align: center; padding: 60px; max-width: 650px; width: 100%; border-color: rgba(52,211,153,0.3); box-shadow: 0 0 50px rgba(52,211,153,0.1);">
+            <div style="font-size: 2.6rem; margin-bottom: 25px;"> <span style="color: white; font-weight: bold; line-height: 1.2;">Analyzing your financial<br>roadmap...</span></div>
+            <p style="color: #94a3b8; font-size: 1.1rem; line-height: 1.6;">Our AI is scanning millions of data points to find your perfect match.<br>Please wait.</p>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 40px;">
+                <div class="pulse-dot" style="width: 12px; height: 12px;"></div>
+                <div class="pulse-dot" style="animation-delay: 0.2s; width: 12px; height: 12px;"></div>
+                <div class="pulse-dot" style="animation-delay: 0.4s; width: 12px; height: 12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container" id="main-container">
+        
+        <!-- VIEW 1: LANDING PAGE -->
+        <div id="landing-view" class="view-section active-view">
+            <div class="header">
+                <h1 style="font-size: 4rem; margin-bottom: 0;">Card<span class="text-green">Scout</span></h1>
+                <p style="color: #FBBF24; font-size: 0.85rem; font-weight: bold; letter-spacing: 3px; margin-top: 10px;">SMART DECISIONS, SMARTER REWARDS.</p>
+            </div>
+            <div class="landing-cards">
+                <div class="landing-card" id="card-guest" style="position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 20px; left: 20px; color: #34D399; opacity: 0.3; pointer-events: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg></div>
+                    <div style="position: absolute; top: 20px; right: 20px; color: #34D399; opacity: 0.3; pointer-events: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 9a12 12 0 0 1 16 0"/><path d="M8 14a6 6 0 0 1 8 0"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+                    <div style="position: absolute; bottom: 20px; left: 20px; color: #34D399; opacity: 0.3; pointer-events: none;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg></div>
+                    <div style="position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100%;">
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;"><h2 style="color: white; font-size: 1.4rem; margin-bottom: 12px; font-weight: 700;">Guest Scout</h2><p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.6; padding: 0 15px;">Analyze your expenditure profile to discover your highest-yielding credit card match.</p></div>
+                        <button id="enter-discovery-btn" class="action-btn outline-btn" style="border-color: #FBBF24; color: #FBBF24; background: rgba(251, 191, 36, 0.05); margin-top: 15px; pointer-events: auto; position: relative; z-index: 20;">Enter Discovery Mode</button>
+                    </div>
+                </div>
+                <div class="landing-card" id="card-vault" style="position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); color: #FBBF24; opacity: 0.15; pointer-events: none;"><svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5"><path d="M12 3a9 9 0 0 0-9 9"/><path d="M12 7a5 5 0 0 0-5 5"/><path d="M12 11a1 1 0 0 0-1 1"/><path d="M12 15c-2.5 0-5-1-7-3"/><path d="M12 19c-4 0-8-1.5-11-4.5"/></svg></div>
+                    <div style="position: absolute; bottom: 20px; right: 20px; color: #FBBF24; opacity: 0.3; pointer-events: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+                    <div style="position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100%;">
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;"><h2 style="color: white; font-size: 1.4rem; margin-bottom: 12px; font-weight: 700;">The Obsidian Vault</h2><p style="color: #94a3b8; font-size: 0.85rem; line-height: 1.6; padding: 0 15px;">Access your secure portfolio to track rewards, monitor yields, and optimize benefits.</p></div>
+                        <button class="action-btn outline-btn vault-action-btn" style="border-color: #FBBF24; color: #FBBF24; background: rgba(251, 191, 36, 0.05); margin-top: 15px; pointer-events: auto; position: relative; z-index: 20;">Access The Vault</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: DISCOVERY MODE -->
+        <div id="discovery-view" class="view-section hidden">
+            <div class="header"><h1>Card<span class="text-green">Scout</span></h1><p style="color: #FBBF24;">SMART DECISIONS, SMARTER REWARDS.</p></div>
+            <div class="form-section-title"><div class="step-indicator"><div class="dot"></div> STEP 1 // BASIC PROFILE</div><div class="step-label">Profile Details</div></div>
+            <div class="card basic-profile-card"><div class="card-header"><h3>1. WHAT SHOULD WE CALL YOU?</h3></div><input type="text" id="user-name" class="text-input" placeholder="Enter your name" value="Sahil Kadam"></div>
+            <div class="card basic-profile-card"><div class="card-header"><h3>2. AGE</h3><span class="badge" id="age-label">28 Years</span></div><input type="range" id="age-slider" class="slider" min="18" max="75" value="28"><div class="labels"><span>18 Years</span><span>45 Years</span><span>75 Years</span></div></div>
+            <div class="card basic-profile-card"><div class="card-header"><h3>3. PROFESSIONAL PROFILE</h3></div><div class="grid-options"><div class="option-box active">💼<br><br>Salaried</div><div class="option-box">👨‍⚕️<br><br>Self-employed (Doc/CA)</div><div class="option-box">🏢<br><br>Business Owner</div><div class="option-box">🎓<br><br>Student</div><div class="option-box">👤<br><br>Other...</div></div></div>
+            <div class="card basic-profile-card"><div class="card-header"><h3>5. MONTHLY IN-HAND SALARY (₹)</h3><span class="live-tracking"><span class="pulse-dot"></span> Live Tracking</span></div><div class="gauge-container"><svg viewBox="0 0 100 55" class="gauge"><path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#1e293b" stroke-width="8" stroke-linecap="round"/><path id="income-fill" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#34D399" stroke-width="8" stroke-linecap="round"/></svg><div class="gauge-text"><div style="display: flex; align-items: center; justify-content: center;"><span style="font-size: 1.8rem; font-weight: bold; color: white;">₹</span><input type="number" id="income-input" value="10000" style="background: transparent; border: none; color: white; font-size: 1.8rem; font-weight: bold; outline: none; width: 110px; text-align: center; margin: 0; padding: 0;"></div><p>Monthly In-Hand Net Income</p></div></div><input type="range" id="income-slider" class="slider" min="10000" max="500000" step="5000" value="10000"><div class="labels"><span>₹10,000</span><span>₹1,50,000</span><span>₹3,00,000</span><span>₹5,00,000+</span></div></div>
+            <div class="card basic-profile-card"><div class="card-header"><h3>6. ESTIMATED CREDIT SCORE</h3><span class="badge" id="credit-badge" style="color: #FBBF24; border-color: rgba(251, 191, 36, 0.2); background: rgba(251, 191, 36, 0.1);">Don't Know</span></div><div class="gauge-container" style="margin-top: 20px;"><svg viewBox="0 0 100 55" class="gauge"><path d="M 10 50 A 40 40 0 0 1 35 23" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/><path d="M 35 23 A 40 40 0 0 1 65 23" fill="none" stroke="#f59e0b" stroke-width="6"/><path d="M 65 23 A 40 40 0 0 1 90 50" fill="none" stroke="#34D399" stroke-width="6" stroke-linecap="round"/><g id="credit-needle" style="transform-origin: 50px 45px; transform: rotate(30deg); transition: 0.3s;"><line x1="50" y1="45" x2="25" y2="25" stroke="#fff" stroke-width="2" stroke-linecap="round" /><circle cx="50" cy="45" r="3" fill="#fff" /></g></svg></div><div class="credit-options"><button class="credit-btn" data-val="< 700">&lt; 700</button><button class="credit-btn" data-val="700 - 750">700 - 750</button><button class="credit-btn" data-val="> 750">&gt; 750</button><button class="credit-btn active" data-val="Don't Know">Don't Know</button></div></div>
+            <div id="next-btn-wrapper" style="display: flex; justify-content: flex-end; width: 100%; margin-top: 20px;"><button id="next-step-btn" class="action-btn filled-btn" style="max-width: 300px; border-radius: 12px; box-shadow: 0 0 20px rgba(52,211,153,0.2);">Next Step // Configure Habits</button></div>
+        </div>
+
+        <!-- VIEW 3: EXPENSE BLUEPRINT -->
+        <div id="expense-blueprint-view" class="hidden view-section">
+            <div class="header" style="margin-top: 40px;"><h1>Expense <span class="text-green" style="color: #06b6d4;">Blueprint</span></h1><p style="color: #FBBF24;">MAP YOUR REWARD POTENTIAL.</p></div>
+            <div class="form-section-title"><div class="step-indicator" style="color: #06b6d4;"><div class="dot" style="background: #06b6d4; box-shadow: 0 0 8px #06b6d4;"></div> STEP 2 // SPENDING HABITS</div><div class="step-label">Total: ₹<span id="total-monthly">0</span>/mo</div></div>
+            <div class="card"><div class="card-header"><h3>1. SELECT MAIN PREFERENCES</h3><span class="badge" style="color: #06b6d4; border-color: rgba(6, 182, 212, 0.2); background: rgba(6, 182, 212, 0.1);">₹<span id="total-annual">0</span> Annualized</span></div>
+                <div class="expense-grid">
+                    <div class="expense-box"><div class="expense-info"><span class="icon" style="color: #3b82f6;">✈️</span><div><h4>Travel & Forex</h4><p>Flights, international trips & forex cards</p></div></div><div class="stepper"><button class="step-btn minus" data-target="travel-val">-</button><div class="step-val" style="display: flex; align-items: center; justify-content: center;">₹<input type="number" id="travel-val" value="0" style="background: transparent; border: none; color: white; font-weight: bold; font-size: 0.9rem; outline: none; width: 60px; text-align: center;"></div><button class="step-btn plus" data-target="travel-val">+</button></div></div>
+                    <div class="expense-box"><div class="expense-info"><span class="icon" style="color: #ec4899;">🛍️</span><div><h4>Online Shopping</h4><p>Amazon, Flipkart, Myntra & gadgets</p></div></div><div class="stepper"><button class="step-btn minus" data-target="shopping-val">-</button><div class="step-val" style="display: flex; align-items: center; justify-content: center;">₹<input type="number" id="shopping-val" value="0" style="background: transparent; border: none; color: white; font-weight: bold; font-size: 0.9rem; outline: none; width: 60px; text-align: center;"></div><button class="step-btn plus" data-target="shopping-val">+</button></div></div>
+                    <div class="expense-box"><div class="expense-info"><span class="icon" style="color: #eab308;">🍽️</span><div><h4>Lifestyle (Dining & Movies)</h4><p>Swiggy, Zomato, cafes & cinema</p></div></div><div class="stepper"><button class="step-btn minus" data-target="lifestyle-val">-</button><div class="step-val" style="display: flex; align-items: center; justify-content: center;">₹<input type="number" id="lifestyle-val" value="0" style="background: transparent; border: none; color: white; font-weight: bold; font-size: 0.9rem; outline: none; width: 60px; text-align: center;"></div><button class="step-btn plus" data-target="lifestyle-val">+</button></div></div>
+                    <div class="expense-box"><div class="expense-info"><span class="icon" style="color: #a855f7;">🛒</span><div><h4>Essentials (Groceries & Quick Comm)</h4><p>Blinkit, Zepto, Instamart & BigBasket</p></div></div><div class="stepper"><button class="step-btn minus" data-target="essentials-val">-</button><div class="step-val" style="display: flex; align-items: center; justify-content: center;">₹<input type="number" id="essentials-val" value="0" style="background: transparent; border: none; color: white; font-weight: bold; font-size: 0.9rem; outline: none; width: 60px; text-align: center;"></div><button class="step-btn plus" data-target="essentials-val">+</button></div></div>
+                    <div class="expense-box"><div class="expense-info"><span class="icon" style="color: #3b82f6;">⚡</span><div><h4>Utilities & Rent</h4><p>Electricity, broadband, rent & mobile</p></div></div><div class="stepper"><button class="step-btn minus" data-target="utilities-val">-</button><div class="step-val" style="display: flex; align-items: center; justify-content: center;">₹<input type="number" id="utilities-val" value="0" style="background: transparent; border: none; color: white; font-weight: bold; font-size: 0.9rem; outline: none; width: 60px; text-align: center;"></div><button class="step-btn plus" data-target="utilities-val">+</button></div></div>
+                    <div class="expense-box"><div class="expense-info"><span class="icon" style="color: #f59e0b;">⛽</span><div><h4>Transport (Fuel & UPI)</h4><p>Petrol, diesel, EV charging & toll gates</p></div></div><div class="stepper"><button class="step-btn minus" data-target="transport-val">-</button><div class="step-val" style="display: flex; align-items: center; justify-content: center;">₹<input type="number" id="transport-val" value="0" style="background: transparent; border: none; color: white; font-weight: bold; font-size: 0.9rem; outline: none; width: 60px; text-align: center;"></div><button class="step-btn plus" data-target="transport-val">+</button></div></div>
+                </div>
+                <div style="margin: 30px 0 10px 0;"><h3 style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 15px;"><span style="color: #a855f7;">+</span> 2. CUSTOM CATEGORIES</h3><button id="add-custom-cat-trigger" class="action-btn outline-btn" style="padding: 10px 20px; font-size: 0.85rem; width: auto; margin-top: 0;">Add Other Category</button></div>
+            </div>
+            <div class="card" style="margin-top: 20px;"><div class="card-header"><h3>🏦 3. BANKING & EXISTING CARDS</h3></div>
+                <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;"><p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 15px;">Current Bank Relation(s)</p><div class="grid-options" style="grid-template-columns: repeat(3, 1fr);"><div class="option-box bank-box active">🏛️<br>HDFC Bank</div><div class="option-box bank-box">🏛️<br>ICICI Bank</div><div class="option-box bank-box active">🔵<br>SBI</div><div class="option-box bank-box">🔺<br>Axis Bank</div><div class="option-box bank-box">🔴<br>Kotak</div><div class="option-box bank-box">🟦<br>Amex</div></div></div>
+                    <div style="flex: 1; min-width: 250px;"><div style="display: flex; justify-content: space-between; margin-bottom: 15px;"><p style="color: #94a3b8; font-size: 0.85rem;">Do you own a credit card?</p><div class="toggle-group"><button class="toggle-btn active" id="cc-no">No</button><button class="toggle-btn" id="cc-yes">Yes</button></div></div><div id="cc-details" class="hidden"><p style="font-size: 0.75rem; color:#64748b; margin-bottom: 5px;">Current Card Name</p><input type="text" class="text-input" value="HDFC Regalia Gold" style="margin-bottom: 15px;"><p style="font-size: 0.75rem; color:#64748b; margin-bottom: 5px;">Approved Credit Limit (₹)</p><input type="number" class="text-input" value="350000"></div></div>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 20px;"><div class="card-header" style="display: flex; justify-content: space-between; align-items: center;"><h3>🎯 4. REWARD TYPE PRIORITY</h3><label style="color: #e2e8f0; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" id="all-rewards" style="accent-color: #34D399; width: 16px; height: 16px;">All of the above</label></div>
+                <div class="grid-options" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                    <div class="option-box reward-box active"><div class="check-icon">✔</div><span style="color: #34D399; font-size: 1.5rem; display: block; margin-bottom: 10px;">₹</span><h4 style="color: white; margin-bottom: 5px; font-size: 0.9rem;">Direct Cashback</h4><p style="font-size: 0.7rem; font-weight: normal; color: #94a3b8;">Auto-credit to statement</p></div>
+                    <div class="option-box reward-box active"><div class="check-icon">✔</div><span style="color: #FBBF24; font-size: 1.5rem; display: block; margin-bottom: 10px;">✈️</span><h4 style="color: white; margin-bottom: 5px; font-size: 0.9rem;">Air Miles & Travel</h4><p style="font-size: 0.7rem; font-weight: normal; color: #94a3b8;">Flights & luxury hotels</p></div>
+                    <div class="option-box reward-box"><div class="check-icon hidden">✔</div><span style="color: #3b82f6; font-size: 1.5rem; display: block; margin-bottom: 10px;">🎁</span><h4 style="color: white; margin-bottom: 5px; font-size: 0.9rem;">Reward Points</h4><p style="font-size: 0.7rem; font-weight: normal; color: #94a3b8;">Flexible brand vouchers</p></div>
+                    <div class="option-box reward-box"><div class="check-icon hidden">✔</div><span style="color: #a855f7; font-size: 1.5rem; display: block; margin-bottom: 10px;">🛋️</span><h4 style="color: white; margin-bottom: 5px; font-size: 0.9rem;">Premium Lounge Access</h4><p style="font-size: 0.7rem; font-weight: normal; color: #94a3b8;">Domestic & International</p></div>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 20px;"><div class="card-header"><h3>💰 5. FEE PREFERENCE</h3></div><input type="range" id="fee-slider" class="slider" min="0" max="2" value="2" style="margin: 30px 0 20px 0;"><div class="labels" style="justify-content: space-between;"><span style="flex: 1; text-align: left;">Lifetime Free (LTF) Only</span><span style="flex: 1; text-align: center; color: #FBBF24;">High Rewards (Willing to pay fees)</span><span style="flex: 1; text-align: right;">Any Tier</span></div></div>
+            <div style="display: flex; justify-content: space-between; margin-top: 30px;"><button id="back-step-btn" class="action-btn outline-btn" style="max-width: 150px;">&larr; Back</button><button id="submit-btn" class="action-btn filled-btn" style="max-width: 300px;">Confirm Profile & Calculate 🚀</button></div>
+        </div>
+
+        <!-- VIEW 4: AI DASHBOARD (RESULTS) -->
+        <div id="results-view" class="view-section hidden">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                <div><span style="color: #34D399; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px;">⚲ INTELLIGENCE HUB & ROADMAP GENERATOR</span><h1 style="color: white; font-size: 1.8rem; margin: 5px 0;">Top-5 Podium Recommendations</h1><p style="color: #64748b; font-size: 0.85rem;">Optimized mathematically against your spending blueprint.</p></div>
+                <div style="display: flex; gap: 10px;"><button class="action-btn outline-btn" id="edit-profile-btn" style="padding: 10px 15px; font-size: 0.8rem; width: auto; margin: 0;">&larr; Edit Profile & Spends</button><button class="action-btn outline-btn export-btn" style="padding: 10px 15px; font-size: 0.8rem; width: auto; margin: 0; color: #3b82f6; border-color: rgba(59, 130, 246, 0.5);">📥 Export Intelligence Report (PDF)</button></div>
+            </div>
+            <div class="card" style="padding: 30px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 25px;"><h2 style="color: white; font-size: 1.4rem; display: flex; align-items: center; gap: 10px;"><div style="width: 4px; height: 24px; background: #34D399;"></div>Strategic Credit Acquisition Roadmap<span style="background: rgba(52,211,153,0.1); color: #34D399; font-size: 0.65rem; padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(52,211,153,0.2);">✨ AI Financial Advisor Synthesis</span></h2></div>
+                <div class="dashboard-summary-grid" id="dynamic-summary-grid"></div>
+                <div id="dynamic-ai-text" style="color: #e2e8f0; font-size: 0.85rem; line-height: 1.7; margin-bottom: 25px;">Loading personalized financial synthesis...</div>
+                <!-- NEW: Podium Table Placeholder -->
+                <div id="dynamic-podium-table" style="margin-bottom: 30px; overflow-x: auto;"></div>
+                <div class="phase-grid">
+                    <div class="phase-box"><span class="phase-num">1</span> <h4>PHASE 1: ENTRY GATEWAY</h4><p>Secure an initial high-approval card. Leverage your existing banking relationship to streamline verification.</p></div>
+                    <div class="phase-box"><span class="phase-num">2</span> <h4>PHASE 2: 30% CIBIL GUARDIAN</h4><p>Keep active billing cycle spends strictly capped under 30% of your limit. Disciplined monthly settlements build CIBIL.</p></div>
+                    <div class="phase-box"><span class="phase-num" style="color: #FBBF24; background: rgba(251,191,36,0.1);">3</span> <h4 style="color: #FBBF24;">PHASE 3: METAL CARD UPGRADE</h4><p>Gradually upgrade to Super Premium metal cards with zero forex markup and lounge access once credit history matures.</p></div>
+                </div>
+            </div>
+            <div class="podium-grid" style="margin-top: 20px;">
+                <div class="card rank-card clickable-card" data-idx="0" style="border-color: rgba(251,191,36,0.4);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;"><span class="rank-badge gold">🏆 Rank #1 Gold</span><span style="color: #64748b; font-size: 0.75rem;" id="r0-net">Visa</span></div>
+                    <h3 style="color: white; font-size: 1.1rem;" id="r0-name">HDFC Bank Infinia Metal</h3><p style="color: #64748b; font-size: 0.75rem; margin-bottom: 20px;" id="r0-sub">HDFC Bank • Super Premium</p>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;"><div><p style="font-size: 0.75rem; color: #94a3b8;">Net Annual Savings</p><div style="color: #34D399; font-size: 1.2rem; font-weight: bold;" id="r0-savings">₹80,140</div><p style="font-size: 0.75rem; color: #94a3b8;">Effective Return <span style="color: white; font-weight: bold; float: right;" id="r0-return">8.05%</span></p></div></div>
+                    <div style="display: flex; gap:10px; margin-top:15px;"><button class="action-btn outline-btn why-btn" data-idx="0" style="padding: 5px 10px; font-size: 0.7rem; color: #FBBF24; border-color: #FBBF24; margin:0; flex:1;">✨ Why it fits</button><button class="action-btn outline-btn insp-btn" data-idx="0" style="padding: 5px 10px; font-size: 0.7rem; margin:0; flex:1;">Inspect ></button></div>
+                </div>
+                <div class="card rank-card clickable-card" data-idx="1" style="border-color: rgba(148,163,184,0.4);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;"><span class="rank-badge silver">🥈 Rank #2 Silver</span><span style="color: #64748b; font-size: 0.75rem;" id="r1-net">RuPay</span></div>
+                    <h3 style="color: white; font-size: 1.1rem;" id="r1-name">Tata Neu Infinity HDFC</h3><p style="color: #64748b; font-size: 0.75rem; margin-bottom: 20px;" id="r1-sub">HDFC Bank • Cashback</p>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;"><div><p style="font-size: 0.75rem; color: #94a3b8;">Net Annual Savings</p><div style="color: #34D399; font-size: 1.2rem; font-weight: bold;" id="r1-savings">₹75,509</div><p style="font-size: 0.75rem; color: #94a3b8;">Effective Return <span style="color: white; font-weight: bold; float: right;" id="r1-return">7.58%</span></p></div></div>
+                    <div style="display: flex; gap:10px; margin-top:15px;"><button class="action-btn outline-btn why-btn" data-idx="1" style="padding: 5px 10px; font-size: 0.7rem; color: #FBBF24; border-color: #FBBF24; margin:0; flex:1;">✨ Why it fits</button><button class="action-btn outline-btn insp-btn" data-idx="1" style="padding: 5px 10px; font-size: 0.7rem; margin:0; flex:1;">Inspect ></button></div>
+                </div>
+                <div class="card rank-card clickable-card" data-idx="2" style="border-color: rgba(180,83,9,0.4);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;"><span class="rank-badge bronze">🥉 Rank #3 Bronze</span><span style="color: #64748b; font-size: 0.75rem;" id="r2-net">Visa</span></div>
+                    <h3 style="color: white; font-size: 1.1rem;" id="r2-name">HDFC Bank Regalia Gold</h3><p style="color: #64748b; font-size: 0.75rem; margin-bottom: 20px;" id="r2-sub">HDFC Bank • Premium</p>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;"><div><p style="font-size: 0.75rem; color: #94a3b8;">Net Annual Savings</p><div style="color: #34D399; font-size: 1.2rem; font-weight: bold;" id="r2-savings">₹73,072</div><p style="font-size: 0.75rem; color: #94a3b8;">Effective Return <span style="color: white; font-weight: bold; float: right;" id="r2-return">7.34%</span></p></div></div>
+                    <div style="display: flex; gap:10px; margin-top:15px;"><button class="action-btn outline-btn why-btn" data-idx="2" style="padding: 5px 10px; font-size: 0.7rem; color: #FBBF24; border-color: #FBBF24; margin:0; flex:1;">✨ Why it fits</button><button class="action-btn outline-btn insp-btn" data-idx="2" style="padding: 5px 10px; font-size: 0.7rem; margin:0; flex:1;">Inspect ></button></div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 20px; margin-top: 10px;">
+                <div class="card clickable-card" data-idx="3" style="flex: 1; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-color: rgba(255,255,255,0.1);">
+                    <div style="display: flex; gap: 10px; align-items: center;"><span style="color: #64748b; font-size: 0.8rem; font-weight: bold;">#4</span><div><h4 style="color: white; font-size: 0.9rem;" id="r3-name">Axis Bank Atlas</h4><span style="color: #64748b; font-size: 0.7rem;" id="r3-sub">Axis Bank</span></div></div>
+                    <div style="display: flex; gap: 15px; align-items: center;"><div style="text-align: right;"><div style="color: #34D399; font-size: 0.9rem; font-weight: bold;" id="r3-savings">₹65,640</div><div style="color: #94a3b8; font-size: 0.65rem;" id="r3-return">6.50% yield</div></div><button class="action-btn outline-btn why-btn" data-idx="3" style="padding: 5px 10px; width: auto; font-size: 0.7rem; margin: 0; color: #FBBF24; border-color: #FBBF24;">✨ Why it fits</button><button class="action-btn outline-btn insp-btn" data-idx="3" style="padding: 5px 10px; width: auto; font-size: 0.7rem; margin: 0;">Inspect ></button></div>
+                </div>
+                <div class="card clickable-card" data-idx="4" style="flex: 1; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-color: rgba(255,255,255,0.1);">
+                    <div style="display: flex; gap: 10px; align-items: center;"><span style="color: #64748b; font-size: 0.8rem; font-weight: bold;">#5</span><div><h4 style="color: white; font-size: 0.9rem;" id="r4-name">Airtel Axis Bank</h4><span style="color: #64748b; font-size: 0.7rem;" id="r4-sub">Axis Bank</span></div></div>
+                    <div style="display: flex; gap: 15px; align-items: center;"><div style="text-align: right;"><div style="color: #34D399; font-size: 0.9rem; font-weight: bold;" id="r4-savings">₹48,350</div><div style="color: #94a3b8; font-size: 0.65rem;" id="r4-return">4.85% yield</div></div><button class="action-btn outline-btn why-btn" data-idx="4" style="padding: 5px 10px; width: auto; font-size: 0.7rem; margin: 0; color: #FBBF24; border-color: #FBBF24;">✨ Why it fits</button><button class="action-btn outline-btn insp-btn" data-idx="4" style="padding: 5px 10px; width: auto; font-size: 0.7rem; margin: 0;">Inspect ></button></div>
+                </div>
+            </div>
+            
+            <div class="card" id="spotlight-section" style="margin-top: 20px; padding: 30px; border-color: #34D399; box-shadow: 0 0 30px rgba(52,211,153,0.1);">
+                <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                    <div class="visual-cc"><div style="color: #34D399; font-size: 0.6rem; font-weight: bold; margin-bottom: 5px;" id="spot-bank">HDFC BANK</div><div style="color: white; font-weight: bold; font-size: 1.1rem;" id="spot-name">HDFC Bank Infinia Metal Edition</div><div style="position: absolute; bottom: 20px; left: 20px; color: #94a3b8; font-size: 0.8rem;">•••• •••• •••• 8492</div><div style="position: absolute; bottom: 20px; right: 20px; color: #fff; font-weight: bold; font-style: italic; font-size: 0.9rem;" id="spot-net">Visa</div></div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
+                        <div style="display: flex; gap: 15px;">
+                            <div style="flex: 1; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);"><p style="font-size: 0.75rem; color: #94a3b8;">Gross Yield</p><div style="color: white; font-size: 1.2rem; font-weight: bold;" id="spot-yield">₹92,640</div></div>
+                            <div style="flex: 1; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);"><p style="font-size: 0.75rem; color: #94a3b8;">Annual Fee</p><div style="color: white; font-size: 1.2rem; font-weight: bold;" id="spot-fee">₹12500</div></div>
+                            <div style="flex: 1; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);"><p style="font-size: 0.75rem; color: #94a3b8;">Forex Markup</p><div style="color: #34D399; font-size: 1.2rem; font-weight: bold;" id="spot-forex">2.0% + GST</div></div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);"><p style="font-size: 0.75rem; color: #94a3b8;">Welcome Bonus Benefit</p><div style="color: #FBBF24; font-size: 0.85rem; font-weight: bold;" id="spot-welcome">12,500 Reward Points on fee realization (Value: ₹12,500 for flights/hotels)</div></div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+                    
+                    <button class="action-btn outline-btn battleground-btn" style="width: auto; padding: 10px 20px; font-size: 0.8rem; margin:0; border-color: #6366f1; color: #6366f1;">⚔️ Compare in Battleground</button>
+                    <button class="action-btn outline-btn why-btn" data-idx="0" id="spot-why-btn" style="width: auto; padding: 10px 20px; font-size: 0.8rem; margin:0; color: #FBBF24; border-color: #FBBF24;">✨ Why This Card Fits You</button>
+                    <button class="action-btn outline-btn insp-btn" data-idx="0" id="spot-insp-btn" style="width: auto; padding: 10px 20px; font-size: 0.8rem; margin:0; color: #34D399; border-color: rgba(52,211,153,0.3);">◎ Inspect Full Specs & Perks</button>
+                </div>
+                
+                <!-- RESTORED: MISSING STEPS BLOCK -->
+                <div style="border: 1px solid rgba(52,211,153,0.2); border-radius: 8px; padding: 20px; background: rgba(0,0,0,0.4); margin-top:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><h4 style="color:white; font-size:0.9rem;">◎ STEP-BY-STEP ACQUISITION ROADMAP</h4><span style="color:#34D399; font-size:0.75rem; border:1px solid rgba(52,211,153,0.3); padding:4px 10px; border-radius:12px; background: rgba(52,211,153,0.1);">Eligibility: Conditional</span></div>
+                    <div style="display:flex; gap:15px; margin-bottom:15px;"><div style="flex:1; background:rgba(255,255,255,0.05); padding:10px; border-radius:6px;"><p style="font-size:0.65rem; color:#64748b;">CIBIL Requirement</p><div style="color:white; font-weight:bold; font-size:0.85rem;" id="spot-cibil">770+</div></div><div style="flex:2; background:rgba(255,255,255,0.05); padding:10px; border-radius:6px;"><p style="font-size:0.65rem; color:#64748b;">Recommended Application Channel</p><div style="color:white; font-weight:bold; font-size:0.85rem;" id="spot-channel">HDFC Bank NetBanking / Branch Relationship Manager</div></div></div>
+                    <ul style="list-style:none; padding:0; margin:0; color:#94a3b8; font-size:0.8rem; line-height: 1.8;" id="spot-steps">
+                        <li><span style="color:#34D399; margin-right:8px;">◎</span> Maintain CIBIL score above 770 by keeping overall portfolio utilization &lt; 30%.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- VIEW 5: VAULT AUTHENTICATION -->
+        <div id="vault-auth-view" class="view-section hidden" style="align-items: center; justify-content: center; min-height: 70vh;">
+            <div class="header" style="margin-bottom: 30px; text-align: center;">
+                <h1 style="font-size: 3.5rem; margin-bottom: 5px; color: white;">Obsidian <span class="text-green">Vault</span></h1>
+                <p style="color: #FBBF24; font-size: 0.8rem; font-weight: bold; letter-spacing: 3px;">ACTIVE YIELD & SUBSCRIPTION COMMAND</p>
+            </div>
+            <div class="card" style="width: 100%; max-width: 450px; padding: 30px; border-radius: 16px; border-color: rgba(52,211,153,0.2);">
+                <h2 id="auth-title" style="color: white; text-align: center; margin-bottom: 25px; font-size: 1.5rem;">Secure Login</h2>
+                <div style="display: flex; gap: 20px; margin-bottom: 25px; justify-content: center;">
+                    <label style="color: #e2e8f0; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;" id="lbl-login"><input type="radio" name="auth_mode" value="login" checked style="accent-color: #34D399;"> Secure Login</label>
+                    <label style="color: #64748b; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px;" id="lbl-register"><input type="radio" name="auth_mode" value="register" style="accent-color: #34D399;"> Create Account</label>
+                </div>
+                <div class="modal-input-group" style="margin-bottom: 20px;"><label style="color: #e2e8f0; font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">👤 Commander ID (Username)</label><input type="text" id="vault-username" class="text-input" placeholder="e.g., abc_24" style="background: rgba(255,255,255,0.05);"></div>
+                <div class="modal-input-group hidden" id="group-name" style="margin-bottom: 20px;"><label style="color: #e2e8f0; font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">📛 Commander Name / Alias</label><input type="text" id="vault-name" class="text-input" placeholder="e.g., Sahil Kadam" style="background: rgba(255,255,255,0.05);"></div>
+                <div class="modal-input-group" style="margin-bottom: 20px;"><label style="color: #e2e8f0; font-size: 0.85rem; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">🔑 Security Clearance (Password)</label><input type="password" id="vault-password" class="text-input" placeholder="Enter your secret passcode" style="background: rgba(255,255,255,0.05);"></div>
+                <div style="margin-bottom: 25px; display: flex; align-items: center; gap: 10px;"><input type="checkbox" id="show-password" style="accent-color: #34D399; width: 16px; height: 16px; cursor: pointer;"><label for="show-password" style="color: #e2e8f0; font-size: 0.85rem; cursor: pointer;">Show password</label></div>
+                <button id="auth-submit-btn" class="action-btn filled-btn" style="width: 100%; max-width: 100%; margin: 0 0 20px 0; border-radius: 8px; box-shadow: 0 0 20px rgba(52,211,153,0.3);">⚡ Breach The Vault</button>
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; padding-top: 20px;">
+                    <div style="background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.2); border-radius: 8px; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="color: white; font-size: 0.9rem; font-weight: bold;">⚡ abc_24 <span style="color: #94a3b8; font-weight: normal; font-size: 0.8rem;">(Demo Account)</span></div>
+                        <button id="demo-autofill-btn" style="background: none; border: none; color: #34D399; font-size: 0.85rem; font-weight: bold; cursor: pointer; text-transform: uppercase;">Auto Fill &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 6: THE OBSIDIAN VAULT COMMAND CENTER -->
+        <div id="vault-dashboard-view" class="view-section hidden">
+            <!-- Vault Header & KPIs -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                <div>
+                    <span style="color: #34D399; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px;">⬡ THE OBSIDIAN VAULT // COMMAND CENTER</span>
+                    <h1 style="color: white; font-size: 1.8rem; margin: 5px 0;">Digital Wallet & 7-Engine Analytics Hub</h1>
+                    <p style="color: #64748b; font-size: 0.85rem;">Real-time fee pacing, forex audit, point arbitrage, and 30% CIBIL score protection.</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div style="background: rgba(52,211,153,0.1); color: #34D399; padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(52,211,153,0.3); font-size: 0.85rem; font-weight: bold;">● Welcome, Sahil Kadam 👋</div>
+                    <button class="action-btn outline-btn" id="vault-logout-btn" style="padding: 8px 15px; font-size: 0.85rem; width: auto; margin: 0; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">[→ Logout</button>
+                </div>
+            </div>
+
+        
+
+            <!-- Wallet Manager Accordion -->
+            <div class="card" style="padding: 20px; margin-bottom: 25px;">
+                <div id="wallet-manager-toggle" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                    <h3 style="color: #34D399; font-size: 1rem; display: flex; align-items: center; gap: 10px;">💳 My Digital Wallet (Add & Manage your cards here)</h3>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="color: #94a3b8; font-size: 0.85rem;">1 Active Card</span>
+                        <div style="background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: #34D399; width: 28px; height: 28px; border-radius: 6px; display: flex; justify-content: center; align-items: center;">∧</div>
+                    </div>
+                </div>
+                <div id="wallet-manager-content" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 25px;">
+                    <!-- Add Card Input -->
+                    <div style="display: flex; gap: 20px; align-items: flex-end; margin-bottom: 25px;">
+                        <div style="flex: 2;"><label style="font-size: 0.75rem; color: #e2e8f0; margin-bottom: 8px; display: block;">Enter a credit card:</label><input type="text" id="new-card-name" class="text-input" placeholder="e.g., HDFC Regalia, BPCL SBI..." style="background: rgba(0,0,0,0.4);"></div>
+                        <div style="flex: 1;"><label style="font-size: 0.75rem; color: #e2e8f0; margin-bottom: 8px; display: block;">Credit Limit (₹):</label><div class="stepper" style="background: rgba(0,0,0,0.4);"><button class="step-btn" id="limit-minus-btn">-</button><div class="step-val"><span id="new-card-limit">50000</span></div><button class="step-btn" id="limit-plus-btn">+</button></div></div>
+                        <button class="action-btn outline-btn" id="add-wallet-btn" style="margin: 0; width: auto; padding: 14px 25px; border-color: rgba(52,211,153,0.5);">+ Add to Wallet</button>
+                    </div>
+
+                    <!-- Management List -->
+                    <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                        <label style="font-size: 0.75rem; color: #e2e8f0; margin-bottom: 15px; display: block;">Your Active Cards (Modify limit or remove):</label>
+                        <div id="wallet-management-list" style="display: flex; flex-direction: column; gap: 10px;">
+                            <!-- Managed list items injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOP/BOTTOM LAYOUT: Active Cards Grid First, Engines Second -->
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+                
+                <!-- TOP: Active Cards Horizontal Grid -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <span style="font-size: 0.75rem; color: #94a3b8; font-weight: bold; letter-spacing: 1px;">ACTIVE DIGITAL WALLET</span>
+                        <span style="font-size: 0.75rem; color: #94a3b8; font-weight: bold; letter-spacing: 1px;">CLICK TO INSPECT ANALYTICAL ENGINES</span>
+                    </div>
+                    
+                    <div id="wallet-grid" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <!-- Cards are now dynamically generated by JavaScript here -->
+                    </div>
+                </div>
+                    
+                </div>
+
+                <!-- BOTTOM: 7-Engine Content (Full Width) -->
+                <div>
+                    <!-- Scrolling Tabs -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+                        <button class="engine-tab active" data-engine="engine-1">🕒 1. Fee Waiver Pacing</button>
+                        <button class="engine-tab" data-engine="engine-2">🎯 2. Live Offers Radar</button>
+                        <button class="engine-tab" data-engine="engine-3">🏆 3. Milestone Gamification</button>
+                        <button class="engine-tab" data-engine="engine-4">🔄 4. Subscription Saver</button>
+                        <button class="engine-tab" data-engine="engine-5">🌐 5. Forex Engine</button>
+                        <button class="engine-tab" data-engine="engine-6">📈 6. Point Valuation Matrix</button>
+                        <button class="engine-tab" data-engine="engine-7">⚠️ 7. Penalty Audit</button>
+                    </div>
+
+                    <!-- Engines Container -->
+                    <div class="card" style="padding: 30px;">
+                        
+                        <!-- ENGINE 1: Fee Waiver Pacing -->
+                        <div id="engine-1" class="engine-panel active">
+                            <h2 style="color: white; font-size: 1.3rem; margin-bottom: 5px;">Fee Waiver Pace Tracker</h2>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px;">Track if you are spending enough to get your annual fee waived.</p>
+                            
+                            <label style="font-size: 0.75rem; color: white; margin-bottom: 8px; display: block;">Select card to track:</label>
+                            <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+                                <select id="engine-1-card-select" class="vault-card-select text-input" style="flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; color: white; outline: none; cursor: pointer; font-size: 0.95rem;">
+                                    <option value="">No cards in vault...</option>
+                                </select>
+                                <button id="track-waiver-btn" class="action-btn filled-btn" style="margin: 0; width: auto; padding: 0 30px; border-radius: 8px;">Track Waiver</button>
+                            </div>
+
+                            <div style="display: flex; gap: 40px; margin-bottom: 30px;">
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.75rem; color: white; margin-bottom: 8px; display: block;">Your Actual Current Spend (₹)</label>
+                                    <div class="stepper" style="background: rgba(0,0,0,0.4); display: flex; justify-content: flex-start; align-items: center; padding: 10px 15px; border-radius: 8px;">
+                                        <span style="color: white; margin-right: 2px;">₹</span>
+                                        <!-- Changed from <span> to <input> so you can type -->
+                                        <input type="number" id="engine-1-spend" value="3000" style="flex-grow: 1; background: transparent; border: none; color: white; font-weight: bold; font-size: 1rem; outline: none; width: 100%;" />
+                                        <button class="step-btn minus" style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 5px 12px; border-radius: 4px; cursor: pointer;">-</button>
+                                        <button class="step-btn plus" style="margin-left:5px; background: rgba(255,255,255,0.1); border: none; color: white; padding: 5px 12px; border-radius: 4px; cursor: pointer;">+</button>
+                                    </div>
+                                </div>
+                               <div style="flex: 2;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <label style="font-size: 0.75rem; color: white;">Months remaining until card next fee payment</label>
+                                        <span id="months-display" style="color: white; font-weight: bold; font-size: 0.85rem;">3</span>
+                                    </div>
+                                    <input type="range" id="months-slider" min="1" max="12" value="3" style="width: 100%; accent-color: #34D399; cursor: pointer; margin-top: 20px;">
+                                </div>
+                            </div>
+
+                            <!-- Replace everything below the slider section with this: -->
+                            <label style="font-size: 0.75rem; color: white; margin-bottom: 5px; display: block;">Target Spend for Waiver</label>
+                            <div id="engine-1-target-display" style="color: white; font-size: 2rem; font-weight: bold; margin-bottom: 10px;">---</div>
+                            <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-size: 0.75rem; padding: 4px 10px; border-radius: 4px;"><span id="engine-1-remaining">---</span> remaining</span>
+
+                            <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin-top: 30px;">
+                                <p style="color: white; font-size: 0.9rem; margin-bottom: 20px;"><strong>The Pacing Math:</strong> You need to spend <strong id="engine-1-monthly-target">---</strong> / month for the next <span id="math-months-display">3</span> months to waive your fee.</p>
+                                <div style="background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: center; color: #64748b; font-size: 0.85rem;">
+                                    Select a card and click "Track Waiver" to calculate pacing.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ENGINE 2: Live Offers Radar -->
+                        <div id="engine-2" class="engine-panel">
+                            <h2 style="color: white; font-size: 1.3rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;"><span style="color: #06b6d4;">🎯</span> Engine 2: Live Offers Radar // Real-Time Merchant Scraping</h2>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 15px;">Scanning 5 consumer verticals: E-Commerce, Food Delivery, Travel, Transit, and Fuel.</p>
+                            
+                            <div style="display: flex; gap: 15px; margin-bottom: 25px; align-items: center;">
+                                <select id="engine-2-select" class="vault-card-select text-input" style="flex: 1; max-width: 400px; cursor: pointer; border-color: rgba(6,182,212,0.4);">
+                                    <option value="">No cards in vault...</option>
+                                </select>
+                                <button id="scan-offers-btn" class="action-btn outline-btn" style="margin: 0; width: auto; padding: 10px 20px; color: #06b6d4; border-color: #06b6d4;">🎯 Scan Live Offers</button>
+                            </div>
+                            
+                            <!-- Empty Grid waiting for AI injection -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div style="grid-column: span 2; text-align: center; padding: 40px; color: #64748b; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1);">
+                                    Waiting for scan... Select a card above and click "Scan Live Offers" to fetch real-time deals.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ENGINE 3: Milestone Gamification -->
+                        <div id="engine-3" class="engine-panel">
+                            <h2 style="color: white; font-size: 1.3rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;"><span style="color: #FBBF24;">🏆</span> Engine 3: Milestone Rewards // Spend-Tier Gamification</h2>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 15px;">Unlock high-value flight tickets, hotel vouchers, and bonus points based on your annual spend tiers.</p>
+                            
+                            <div style="display: flex; gap: 15px; margin-bottom: 25px; align-items: center;">
+                                <select id="engine-3-select" class="vault-card-select text-input" style="flex: 1; max-width: 400px; cursor: pointer; border-color: rgba(251,191,36,0.4);">
+                                    <option value="">No cards in vault...</option>
+                                </select>
+                                <button id="check-milestones-btn" class="action-btn outline-btn" style="margin: 0; width: auto; padding: 10px 20px; color: #FBBF24; border-color: #FBBF24;">🏆 Check Milestones</button>
+                            </div>
+                            
+                            <!-- Empty Placeholder waiting for AI injection -->
+                            <div style="text-align: center; padding: 40px; color: #64748b; background: rgba(0,0,0,0.4); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1);">
+                                Waiting for analysis... Select a card above and click "Check Milestones" to reveal hidden spend-tier rewards.
+                            </div>
+                        </div>
+
+                        <!-- ENGINE 4: Subscription Saver -->
+                        <div id="engine-4" class="engine-panel">
+                            <h2 style="color: white; font-size: 1.3rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;"><span style="color: #a855f7;">🔄</span> Engine 4: Subscription Saver // Utility & Recurring Bill Optimizer</h2>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px;">Routes recurring auto-debits to cards with highest merchant category yields vs standard ₹0 UPI.</p>
+                            
+                            <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <div><h4 style="color: white; font-size: 1rem; margin-bottom: 4px;">Netflix</h4><p style="color: #64748b; font-size: 0.75rem;">Entertainment · Charged to: HDFC Bank Millennia Credit Card</p></div>
+                                <div style="text-align: right; display: flex; align-items: center; gap: 15px;">
+                                    <div><div style="color: white; font-weight: bold; font-size: 1rem; margin-bottom: 2px;">₹649 / mo</div><div style="color: #34D399; font-size: 0.75rem;">Earns ₹13/mo cashback (vs ₹0 on UPI)</div></div>
+                                    <span style="color: #64748b; cursor: pointer;">🗑️</span>
+                                </div>
+                            </div>
+
+                            <div style="background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.2); padding: 25px; border-radius: 12px;">
+                                <h4 style="color: white; font-size: 0.85rem; margin-bottom: 15px; font-weight: bold; letter-spacing: 1px;">ADD RECURRING DIGITAL AUTO-DEBIT</h4>
+                                <div style="display: flex; gap: 15px;">
+                                    <input type="text" class="text-input" placeholder="Service (e.g. Netflix, Gym, Rent)" style="flex: 2; background: rgba(0,0,0,0.5);">
+                                    <input type="number" class="text-input" placeholder="649" style="flex: 1; background: rgba(0,0,0,0.5);">
+                                    <select id="engine-4-card-select" style="flex: 2; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; color: white; outline: none; cursor: pointer;">
+                                        <option value="">No cards in vault...</option>
+                                    </select>
+                                    <button class="action-btn filled-btn" style="margin: 0; flex: 1.5; background: #a855f7; color: white; border-radius: 8px;">Add Subscription</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ENGINE 5: Forex Engine -->
+                        <div id="engine-5" class="engine-panel">
+                            <h2 style="color: white; font-size: 1.3rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;"><span style="color: #3b82f6;">🌐</span> Engine 5: Forex Engine // Cross-Border Optimizer</h2>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 15px;">Calculates true international transaction cost including mandatory 18% Indian GST and DCC penalties.</p>
+                            
+                            <div style="display: flex; gap: 15px; margin-bottom: 25px; align-items: center;">
+                                <select id="engine-5-select" class="vault-card-select text-input" style="flex: 1; max-width: 400px; cursor: pointer; border-color: rgba(59,130,246,0.4);">
+                                    <option value="">No cards in vault...</option>
+                                </select>
+                                <button id="calc-forex-btn" class="action-btn outline-btn" style="margin: 0; width: auto; padding: 10px 20px; color: #3b82f6; border-color: #3b82f6;">🌐 Sync Live Rates & Calculate</button>
+                            </div>
+                            
+                            <div style="display: flex; gap: 30px;">
+                                <div style="flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px;">
+                                    <label style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 10px; display: block;">Target Currency</label>
+                                    <div id="forex-currency-selector" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                                        <button data-currency="USD" style="flex:1; padding: 8px; background: #3b82f6; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; border: 1px solid #60a5fa;">USD ($)</button>
+                                        <button data-currency="EUR" style="flex:1; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #94a3b8; cursor: pointer;">EUR (€)</button>
+                                    </div>
+                                    
+                                    <label style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 10px; display: block;">Foreign Spend Amount (<span id="currency-symbol">$</span>)</label>
+                                    <input type="number" id="forex-foreign-amount" class="text-input" value="2000" style="background: rgba(0,0,0,0.6); margin-bottom: 5px; width: 100%;">
+                                    <p id="forex-inr-preview" style="color: #64748b; font-size: 0.75rem; margin-bottom: 20px;">≈ ₹1,73,000 INR</p>
+                                    
+                                    <p style="color: white; font-size: 0.85rem; margin-bottom: 4px;">Live Exchange Rate: <strong id="live-exchange-rate">Fetching...</strong></p>
+                                    <p style="color: #3b82f6; font-size: 0.75rem;">Base Markup: <span id="forex-markup-rate">---</span>%</p>
+                                </div>
+                                
+                                <div style="flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px; display: flex; flex-direction: column; justify-content: center;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: #94a3b8; font-size: 0.85rem;"><span>Converted INR Base Amount:</span><span id="forex-base-inr" style="color: white; font-weight: bold;">₹0</span></div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: #94a3b8; font-size: 0.85rem;"><span id="forex-markup-label">Bank Forex Markup (---%):</span><span id="forex-markup-fee" style="color: #FBBF24; font-weight: bold;">+₹0</span></div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; color: #94a3b8; font-size: 0.85rem;"><span>Mandatory 18% Indian GST on Markup:</span><span id="forex-gst-fee" style="color: #ef4444; font-weight: bold;">+₹0</span></div>
+                                    <div style="display: flex; justify-content: space-between; margin-top: 10px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: white; font-size: 1.1rem; font-weight: bold;"><span>Total Outflow (Debited):</span><span id="forex-total-outflow">₹0</span></div>
+                                    
+                                    <div id="forex-savings-alert" style="background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.2); padding: 15px; border-radius: 8px; margin-top: 25px; color: #34D399; font-size: 0.8rem; line-height: 1.5; display: none;">
+                                        💡 Switching to a 0% Zero-Forex Card saves you <strong id="forex-savings-amt">₹0</strong> on this trip!
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: rgba(251,191,36,0.05); border: 1px solid rgba(251,191,36,0.3); padding: 20px; border-radius: 8px; margin-top: 20px; display: flex; gap: 15px; align-items: flex-start;">
+                                <div style="color: #FBBF24; font-size: 1.5rem;">⚠️</div>
+                                <div>
+                                    <h4 style="color: #FBBF24; font-size: 1rem; margin-bottom: 5px;">Forensic Trap: Dynamic Currency Conversion (DCC)</h4>
+                                    <p style="color: #e2e8f0; font-size: 0.85rem; line-height: 1.6;">Beware of Dynamic Currency Conversion (DCC): Never choose INR at overseas POS terminals or websites. Overseas merchants mark up exchange rates by 5-7% and Indian banks still levy a 1% + 18% GST DCC markup!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ENGINE 6: Point Valuation Matrix -->
+                        <div id="engine-6" class="engine-panel">
+                            <h2 style="color: white; font-size: 1.3rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;"><span style="color: #a78bfa;">📈</span> Engine 6: Point Valuation Matrix // Arbitrage Engine</h2>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px;">Solves blind redemption by calculating exact INR value across Cash, Vouchers, and Travel Miles.</p>
+
+                            <div style="display: flex; gap: 15px; margin-bottom: 30px; align-items: center;">
+                                <select id="engine-6-select" class="vault-card-select text-input" style="flex: 1; max-width: 400px; cursor: pointer; border-color: rgba(167,139,250,0.4);">
+                                    <option value="">No cards in vault...</option>
+                                </select>
+                                <button id="eval-points-btn" class="action-btn outline-btn" style="margin: 0; width: auto; padding: 10px 20px; color: #a78bfa; border-color: #a78bfa;">📈 Evaluate Points</button>
+                            </div>
+
+                            <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                    <label style="color: white; font-weight: bold;">Inspect Current Points Balance:</label>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <input type="number" id="engine-6-points-input" value="25000" style="background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px; border-radius: 6px; width: 120px; outline: none; font-weight: bold; font-size: 1.1rem;">
+                                        <span style="color: #94a3b8; font-size: 0.85rem;">Reward Points</span>
+                                    </div>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
+                                    <!-- 1. Cash -->
+                                    <div id="e6-box-cash" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; transition: all 0.3s ease;">
+                                        <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 10px;">1. Statement Credit (Cash)</p>
+                                        <div id="e6-val-cash" style="color: white; font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">---</div>
+                                        <p id="e6-rate-cash" style="color: #64748b; font-size: 0.75rem;">Rate: --- / point</p>
+                                    </div>
+                                    <!-- 2. Vouchers -->
+                                    <div id="e6-box-voucher" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; transition: all 0.3s ease;">
+                                        <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 10px;">2. Brand Vouchers</p>
+                                        <div id="e6-val-voucher" style="color: white; font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">---</div>
+                                        <p id="e6-rate-voucher" style="color: #64748b; font-size: 0.75rem;">Rate: --- / point</p>
+                                    </div>
+                                    <!-- 3. Travel -->
+                                    <div id="e6-box-travel" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; transition: all 0.3s ease;">
+                                        <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 10px;">3. Travel / Airmiles</p>
+                                        <div id="e6-val-travel" style="color: white; font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">---</div>
+                                        <p id="e6-rate-travel" style="color: #64748b; font-size: 0.75rem;">Rate: --- / point</p>
+                                    </div>
+                                </div>
+
+                                <!-- Arbitrage Alert Banner -->
+                                <div id="e6-arbitrage-alert" style="background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.2); padding: 20px; border-radius: 8px; display: none;">
+                                    <h4 id="e6-arb-title" style="color: #34D399; margin: 0 0 5px 0; font-size: 1rem; display: flex; align-items: center; gap: 8px;">✨ Arbitrage Opportunity Detected: +₹0</h4>
+                                    <p id="e6-arb-desc" style="color: #e2e8f0; font-size: 0.85rem; margin: 0;">High-yield transfer unlocked!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ENGINE 7: Penalty Audit -->
+                        <div id="engine-7" class="engine-panel">
+                            <h2 style="color: white; font-size: 1.3rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;"><span style="color: #f97316;">⚠️</span> Engine 7: Penalty Audit // Forensic Term Extraction</h2>
+                            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px;">Scrapes predatory clauses, ATM finance triggers, and APR traps from live banking MITC documents.</p>
+
+                            <div style="display: flex; gap: 15px; margin-bottom: 30px; align-items: center;">
+                                <select id="engine-7-select" class="vault-card-select text-input" style="flex: 1; max-width: 400px; cursor: pointer; border-color: rgba(249,115,22,0.4);">
+                                    <option value="">No cards in vault...</option>
+                                </select>
+                                <button id="run-audit-btn" class="action-btn filled-btn" style="margin: 0; width: auto; padding: 10px 20px; background: #ef4444; color: white;">⚠️ Run Forensic Audit</button>
+                            </div>
+
+                            <!-- 5 Penalty Slabs (Updated with Joining Fee) -->
+                            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 20px;">
+                                <!-- 1. Joining / Annual Fee -->
+                                <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                                    <p style="color: #94a3b8; font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase;">Annual Fee</p>
+                                    <div id="e7-joining-fee" style="color: white; font-size: 1.3rem; font-weight: bold; margin-bottom: 10px;">---</div>
+                                    <p style="color: #64748b; font-size: 0.7rem;">+ 18% GST</p>
+                                </div>
+                                <!-- 2. APR -->
+                                <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                                    <p style="color: #94a3b8; font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase;">Annual APR</p>
+                                    <div id="e7-apr" style="color: #ef4444; font-size: 1.3rem; font-weight: bold; margin-bottom: 10px;">---</div>
+                                    <p style="color: #64748b; font-size: 0.7rem;">Compounding finance charge</p>
+                                </div>
+                                <!-- 3. Late Fee -->
+                                <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                                    <p style="color: #94a3b8; font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase;">Late Fee Slab</p>
+                                    <div id="e7-late-fee" style="color: #FBBF24; font-size: 1.3rem; font-weight: bold; margin-bottom: 10px;">---</div>
+                                    <p style="color: #64748b; font-size: 0.7rem;">+ 18% GST per billing cycle</p>
+                                </div>
+                                <!-- 4. Over-Limit -->
+                                <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                                    <p style="color: #94a3b8; font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase;">Over-Limit</p>
+                                    <div id="e7-overlimit" style="color: white; font-size: 1rem; font-weight: bold; margin-bottom: 10px; line-height: 1.4;">---</div>
+                                </div>
+                                <!-- 5. Cash Advance -->
+                                <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                                    <p style="color: #94a3b8; font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; text-transform: uppercase;">Cash Advance</p>
+                                    <div id="e7-cash-advance" style="color: #ef4444; font-size: 1rem; font-weight: bold; margin-bottom: 10px; line-height: 1.4;">---</div>
+                                </div>
+                            </div>
+
+                            <!-- Red Flag Advisory -->
+                            <div style="background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.3); padding: 20px; border-radius: 8px;">
+                                <h4 style="color: #ef4444; margin: 0 0 10px 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">⚠️ CARDSCOUT AI RED FLAG ADVISORY</h4>
+                                <p id="e7-red-flag" style="color: white; font-size: 0.95rem; font-weight: bold; margin: 0; line-height: 1.5;">Select a card to extract predatory MITC clauses.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- Footer -->
+        <div class="footer" style="width: 100%; margin-top: 50px; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; font-size: 0.7rem; color: #475569;">
+            <span>CardScoutAI - Generative AI Credit Card Optimizer & Financial Intelligence Hub</span>
+            <span>30% CIBIL Utilization Guardian • Forensic Penalty Audits • PBKDF2-HMAC-SHA256 Encrypted</span>
+        </div>
+    </div> 
+    
+    <!-- MODALS -->
+    <div id="custom-alert-modal" class="modal-overlay hidden"><div class="modal-content" style="text-align: center; max-width: 400px; z-index: 1001;">
+        <div style="font-size: 2.5rem; margin-bottom: 15px;" id="alert-icon">⚔️</div>
+        <h3 style="color: white; margin-bottom: 10px;" id="alert-title">Initializing Battleground</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px; line-height: 1.5;" id="alert-message">Pre-loading Card A vs Card B forensic comparison...</p>
+        <button class="action-btn filled-btn close-alert-btn" style="width: 100%; margin: 0; border-radius: 8px;">Acknowledged</button>
+    </div></div>
+    <!-- BATTLEGROUND INPUT MODAL -->
+    <div id="battle-input-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 450px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">⚔️</div>
+            <h3 style="color: white; margin-bottom: 10px;">The Battleground</h3>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px; line-height: 1.5;">Enter the name of any credit card you want to compare against our AI's top recommendation.</p>
+            <input type="text" id="battle-card-input" class="text-input" placeholder="e.g., SBI BPCL Credit Card" style="margin-bottom: 20px;">
+            <div class="modal-actions" style="justify-content: center; gap: 15px;">
+                <button class="action-btn outline-btn close-modal" style="width: auto; padding: 10px 20px; border: none; color: #94a3b8; box-shadow: none;">Cancel</button>
+                <button id="start-battle-btn" class="action-btn filled-btn" style="width: auto; padding: 10px 30px; margin: 0; background: #34D399; color: #022c22; border-radius: 8px;">Compare Cards ⚔️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BATTLEGROUND RESULT MODAL -->
+    <div id="battle-result-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 850px; width: 95%; max-height: 85vh; display: flex; flex-direction: column; padding: 0;">
+            <div style="padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; background: #08100C;">
+                <h3 style="color: white; margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">⚔️ Card Battle: Peer-to-Peer Analysis</h3>
+                <button class="close-modal" style="background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div style="padding: 25px; overflow-y: auto; flex-grow: 1;">
+                <h4 style="color: #FBBF24; font-size: 1rem; margin-bottom: 15px;">🏆 Our Top Pick vs. <span id="battle-challenger-name">...</span></h4>
+                <div id="battle-result-content" style="color: #e2e8f0; font-size: 0.9rem;">
+                    <!-- AI Table Content generates here -->
+                </div>
+            </div>
+            <div style="padding: 15px 25px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+                <button class="action-btn outline-btn close-modal" style="width: 100%; border-color: rgba(255,255,255,0.1); color: #94a3b8; border-radius: 8px;">Close Analysis</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-category-modal" class="modal-overlay hidden"><div class="modal-content"><h3>Add Custom Category</h3><div class="modal-input-group"><label>Category Name</label><input type="text" id="custom-cat-name" class="text-input" placeholder="e.g. Education, Insurance, Healthcare"></div><div class="modal-input-group"><label>Estimated Monthly Spend (₹)</label><input type="number" id="custom-cat-spend" class="text-input" placeholder="5000"></div><div class="modal-actions"><button id="close-modal-btn" class="action-btn outline-btn" style="border: none; color: #94a3b8; width: auto; padding: 10px 20px; box-shadow: none;">Cancel</button><button id="add-custom-cat-btn" class="action-btn filled-btn" style="width: auto; padding: 10px 30px; margin-top: 0; border-radius: 8px;">Add</button></div></div></div>
+    
+    <div id="why-fits-modal" class="modal-overlay hidden"><div class="modal-content" style="max-width: 600px;">
+        <h3 style="color: #FBBF24; display:flex; align-items:center; gap:10px;">✨ Why This Card Fits You</h3>
+        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:8px; margin-bottom:20px; display:flex; justify-content:space-between;"><div><h4 id="modal-why-name" style="color:white; font-size:1rem;">HDFC Infinia</h4><p id="modal-why-bank" style="color:#94a3b8; font-size:0.75rem;">HDFC Bank</p></div><div style="text-align:right;"><div id="modal-why-savings" style="color:#34D399; font-weight:bold; font-size:1.1rem;">₹80,140</div><p style="color:#94a3b8; font-size:0.7rem;">Net Savings</p></div></div>
+        <p id="modal-why-narrative" style="color:#e2e8f0; font-size:0.9rem; line-height:1.6; margin-bottom:20px; border-left:3px solid #FBBF24; padding-left:15px; font-style:italic;">Loading rationale...</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><h4 style="font-size:0.75rem; color:white; margin-bottom:5px;">🏦 Banking Relationship</h4><p style="font-size:0.7rem; color:#94a3b8;">Leverages your existing tier.</p></div>
+            <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><h4 style="font-size:0.75rem; color:white; margin-bottom:5px;">📈 Spending Optimality</h4><p style="font-size:0.7rem; color:#94a3b8;">Highest multiplier on your top spends.</p></div>
+            <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><h4 style="font-size:0.75rem; color:white; margin-bottom:5px;">🛡️ Bureau Strategy</h4><p style="font-size:0.7rem; color:#94a3b8;">High approval probability.</p></div>
+            <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><h4 style="font-size:0.75rem; color:white; margin-bottom:5px;">🎯 Fee & Value Net</h4><p style="font-size:0.7rem; color:#94a3b8;">Easily hits waiver thresholds.</p></div>
+        </div>
+        <div class="modal-actions">
+            <button class="action-btn outline-btn close-modal" style="border: none; color: #94a3b8; width: auto; padding: 10px 20px; box-shadow: none;">Close</button>
+            <button class="action-btn outline-btn insp-btn-modal" style="width: auto; padding: 10px 20px; border-color: #34D399; color: #34D399; margin: 0;">Inspect Specs ></button>
+            <button class="action-btn filled-btn add-vault-btn" style="width: auto; padding: 10px 20px; margin: 0; border-radius: 8px;">+ Add to Vault</button>
+        </div>
+    </div></div>
+
+    <div id="inspect-modal" class="modal-overlay hidden"><div class="modal-content" style="max-width: 800px; height: 80vh; overflow-y: auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="color: white; display:flex; align-items:center; gap:10px;">◎ Full Specs: <span id="modal-insp-name">Card Name</span></h3>
+            <button class="close-modal" style="background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div style="background:rgba(52,211,153,0.1); padding:15px; border-radius:8px; border:1px solid rgba(52,211,153,0.2); margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between;">
+                <div><p style="color:#94a3b8; font-size:0.7rem;">Net Savings</p><div style="color:#34D399; font-size:1.2rem; font-weight:bold;" id="modal-insp-savings">₹0</div></div>
+                <div><p style="color:#94a3b8; font-size:0.7rem;">Effective Yield</p><div style="color:white; font-size:1.2rem; font-weight:bold;" id="modal-insp-yield">0%</div></div>
+                <div><p style="color:#94a3b8; font-size:0.7rem;">Annual Fee</p><div style="color:white; font-size:1.2rem; font-weight:bold;" id="modal-insp-fee">₹0</div></div>
+                <div><p style="color:#94a3b8; font-size:0.7rem;">Forex Markup</p><div style="color:#06b6d4; font-size:1.2rem; font-weight:bold;" id="modal-insp-forex">0%</div></div>
+            </div>
+        </div>
+        <div style="display:flex; gap:15px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:20px;">
+            <span class="tab-btn active" data-tab="tab-reward">💎 Reward Engine</span>
+            <span class="tab-btn" data-tab="tab-lounge">✈️ Lounge & Travel</span>
+            <span class="tab-btn" data-tab="tab-milestones">🎁 Milestones</span>
+            <span class="tab-btn" data-tab="tab-fineprint">⚠️ Fine Print</span>
+        </div>
+        <div id="tab-reward" class="tab-content active">
+            <p><strong>Base Rewards:</strong> Earn 5 Reward Points per ₹150 spent.</p><p><strong>Accelerated:</strong> 10X points on SmartBuy (Flights, Hotels, Apple products).</p><p><strong>Value:</strong> 1 RP = ₹1 for flights and hotels.</p>
+        </div>
+        <div id="tab-lounge" class="tab-content">
+            <p><strong>Domestic Lounge:</strong> Unlimited access for primary and add-on cardholders.</p><p><strong>International Lounge:</strong> Unlimited Priority Pass access.</p><p><strong>Forex:</strong> 2.0% markup fee across all international transactions.</p>
+        </div>
+        <div id="tab-milestones" class="tab-content">
+            <p><strong>Welcome Benefit:</strong> 12,500 Reward Points upon fee realization.</p><p><strong>Annual Waiver:</strong> Spend ₹10 Lakhs in a year to get the ₹12,500 renewal fee waived.</p>
+        </div>
+        <div id="tab-fineprint" class="tab-content">
+            <p><strong>APR:</strong> 42% annualized interest rate on revolving credit.</p><p><strong>Warning:</strong> ATM cash advances incur compounding interest immediately. Forensic dangerous clause active.</p>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button class="action-btn outline-btn battleground-btn" style="width: auto; padding: 10px 20px; margin:0; border-color: #6366f1; color: #6366f1;">⚔️ Battleground</button>
+            <button class="action-btn filled-btn add-vault-btn" style="width: auto; padding: 10px 20px; margin: 0; border-radius: 8px;">+ Add to Vault</button>
+        </div>
+    </div></div>
+    
+    <!-- ENGINE 8 MODAL: CardScout Co-Pilot Overlay -->
+    <div id="copilot-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 850px; width: 95%; padding: 0; overflow: hidden; display: flex; flex-direction: column; height: 85vh;">
+            
+            <!-- Header -->
+            <div style="padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; background: #08100C;">
+                <div>
+                    <h2 style="color: #34D399; font-size: 1.1rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;">✨ CARDSCOUT CO-PILOT</h2>
+                    <h3 style="color: white; font-size: 1.2rem; margin: 0;">Real-Time Transaction Routing & CIBIL Guardian</h3>
+                </div>
+                <button id="close-copilot-btn" style="background: none; border: none; color: #94a3b8; font-size: 2rem; cursor: pointer; line-height: 1; transition: 0.2s;">&times;</button>
+            </div>
+            
+            <!-- Quick Scenarios -->
+            <div style="padding: 15px 25px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <span style="color: #64748b; font-size: 0.85rem; margin-right: 10px;">Quick Scenarios:</span>
+                    <button class="copilot-pill" data-desc="iPhone 16" data-amt="79900" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s;">iPhone 16 (₹79,900) ↗</button>
+                    <button class="copilot-pill" data-desc="Taj Dining" data-amt="14500" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s;">Taj Dining (₹14,500) ↗</button>
+                    <button class="copilot-pill" data-desc="Dubai Flight" data-amt="48000" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.2s;">Dubai Flight (₹48,000) ↗</button>
+                </div>
+            </div>
+
+            <!-- Chat UI -->
+            <div style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background: rgba(0,0,0,0.4);">
+                
+                <!-- Chat History Box -->
+                <div id="copilot-chat-box" style="padding: 25px; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
+                    <div style="display: flex; gap: 15px; align-items: flex-start;">
+                        <div style="background: rgba(52,211,153,0.1); color: #34D399; padding: 10px; border-radius: 8px; font-size: 1.2rem;">🤖</div>
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border-top-left-radius: 0; color: #e2e8f0; font-size: 0.9rem; line-height: 1.6; max-width: 85%;">
+                            Greetings! I am CardScout Co-Pilot, your generative AI financial advisor. Tell me about any purchase you're about to make, and I will audit your digital wallet to find the optimal card with maximum yield while strictly guarding your 30% CIBIL credit utilization ceiling.
+                            <div style="color: #64748b; font-size: 0.7rem; margin-top: 10px;">Just now</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; align-items: center; background: #08100C;">
+                    <input type="text" id="copilot-desc" placeholder="Merchant / Purchase description" style="flex: 2; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px 15px; border-radius: 8px; outline: none; font-size: 0.9rem;">
+                    <div style="position: relative; flex: 1;">
+                        <span style="position: absolute; left: 15px; top: 12px; color: #94a3b8;">₹</span>
+                        <input type="number" id="copilot-amt" placeholder="Amount" style="width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px 15px 12px 30px; border-radius: 8px; outline: none; font-size: 0.9rem;">
+                    </div>
+                    <button id="copilot-send-btn" style="background: #34D399; border: none; color: #022c22; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: 0.2s;">
+                        ➤
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script src="app.js"></script>
+</body>
+</html>

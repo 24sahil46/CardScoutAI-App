@@ -1,0 +1,146 @@
+/* Import modern font (Inter) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* 1. App Background: Pure CSS Recreation of the Image */
+html, body, [class*="st-"] {
+    font-family: 'Inter', sans-serif !important;
+}
+
+[data-testid="stAppViewContainer"] {
+    background-color: #040D08 !important;
+    background-image: 
+        /* The glowing teal light pool in the center */
+        radial-gradient(ellipse at 50% 30%, rgba(16, 185, 129, 0.15) 0%, transparent 55%),
+        /* The glowing light in the bottom left */
+        radial-gradient(ellipse at 10% 90%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
+        /* The tech grid */
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        /* The Circuit Boards on the left (SVG Code) */
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"><g stroke="rgba(16,185,129,0.08)" stroke-width="2" fill="none"><path d="M-50 400 L200 400 L300 300 L500 300"/><circle cx="200" cy="400" r="4"/><circle cx="300" cy="300" r="4"/><circle cx="500" cy="300" r="6" fill="rgba(16,185,129,0.1)"/><path d="M-50 500 L250 500 L350 600 L450 600"/><circle cx="350" cy="600" r="4"/><circle cx="450" cy="600" r="4"/><path d="M100 200 L150 250 L250 250 L300 200"/></g></svg>'),
+        /* The Candlestick charts on the right (SVG Code) */
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"><g stroke="rgba(16,185,129,0.1)" stroke-width="2"><line x1="200" y1="600" x2="200" y2="450"/><rect x="190" y="480" width="20" height="70" fill="rgba(16,185,129,0.05)"/><line x1="320" y1="520" x2="320" y2="350"/><rect x="310" y="380" width="20" height="100" fill="rgba(16,185,129,0.1)"/><line x1="440" y1="430" x2="440" y2="280"/><rect x="430" y="300" width="20" height="90" fill="rgba(16,185,129,0.1)"/><line x1="560" y1="310" x2="560" y2="160"/><rect x="550" y="190" width="20" height="90" fill="rgba(16,185,129,0.15)"/><path d="M100 550 Q 300 500 650 180" stroke="rgba(16,185,129,0.2)" stroke-width="1.5" fill="none"/></g></svg>')
+        !important;
+    background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px, 800px 800px, 800px 800px !important;
+    background-position: center, center, center, center, left -100px bottom 50px, right -100px bottom 100px !important;
+    background-repeat: no-repeat, no-repeat, repeat, repeat, no-repeat, no-repeat !important;
+    background-attachment: fixed !important;
+    color: #E2E8F0;
+}
+
+[data-testid="stHeader"], .stApp {
+    background: transparent !important;
+}
+
+/* 2. Global Text Colors */
+h1, h2, h3, h4, h5, p, label, [data-testid="stWidgetLabel"] p {
+    color: #F8FAFC !important; 
+}
+
+/* 3. The Extruded 3D Title */
+.hero-title {
+    color: #FFFFFF !important;
+    font-size: 6rem !important;
+    font-weight: 900 !important;
+    letter-spacing: -2px !important;
+    margin-bottom: 0 !important;
+    text-shadow: 
+        0px 1px 0px #cccccc, 
+        0px 2px 0px #b3b3b3, 
+        0px 3px 0px #999999, 
+        0px 4px 0px #808080, 
+        0px 5px 0px #666666, 
+        0px 6px 0px #4d4d4d,
+        0px 12px 25px rgba(0, 0, 0, 0.9),
+        0px 0px 50px rgba(16, 185, 129, 0.4) !important;
+}
+
+.hero-subtitle {
+    color: #A7F3D0 !important;
+    font-size: 1.1rem !important;
+    letter-spacing: 4px !important;
+    font-weight: 500 !important;
+    margin-top: 15px !important;
+    opacity: 0.9 !important;
+}
+
+/* 4. Hide Default Streamlit UI Elements */
+[data-testid="stSidebar"], [data-testid="collapsedControl"], section[data-testid="stSidebar"], [data-testid="stElementToolbar"] {
+    display: none !important;
+}
+
+.nav-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.4), transparent);
+    margin-bottom: 25px;
+}
+
+/* 5. Frosted Glass Cards */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 16px !important;
+    background-color: rgba(6, 20, 11, 0.5) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255,255,255,0.1) !important; 
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"] > div {
+    background: transparent !important;
+}
+
+/* 6. Card Headers & Text */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.card-body {
+    color: #94A3B8 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    min-height: 50px !important;
+}
+
+/* 7. Action Buttons */
+button[kind="primary"] {
+    background: rgba(0,0,0,0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 30px !important;
+    color: #F8FAFC !important;
+    font-weight: 500 !important;
+    padding: 15px 0 !important;
+    transition: all 0.3s ease !important;
+}
+button[kind="primary"]:hover {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-color: #10B981 !important;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2) !important;
+}
+
+/* Top Nav Bronze Buttons */
+button[kind="secondary"], [data-testid="stPopover"] > button {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: #BFA67A !important;
+    border: 1px solid rgba(191, 166, 122, 0.4) !important;
+    border-radius: 30px !important;
+    font-weight: 500 !important;
+    box-shadow: inset 0 1px 3px rgba(255,255,255,0.05) !important;
+    transition: all 0.3s ease !important;
+}
+button[kind="secondary"]:hover, [data-testid="stPopover"] > button:hover {
+    background-color: rgba(191, 166, 122, 0.15) !important;
+    border-color: #BFA67A !important;
+    color: #F8FAFC !important;
+}
+
+/* Popover Menu Styling */
+div[data-testid="stPopoverBody"] {
+    background-color: #040D08 !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.9) !important;
+}
