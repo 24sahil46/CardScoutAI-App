@@ -284,7 +284,7 @@ if(addSubBtn) {
 window.removeSubscription = async function(serviceName, cardUsed) {
     const username = localStorage.getItem("commanderID");
     try {
-        const response = await fetch('[https://cardscoutai-app.onrender.com/api/subscriptions/remove](https://cardscoutai-app.onrender.com/api/subscriptions/remove)', {
+        const response = await fetch('https://cardscoutai-app.onrender.com/api/subscriptions/remove', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, service_name: serviceName, card_used: cardUsed })
