@@ -222,19 +222,32 @@ async function loadSubscriptions() {
         const data = await response.json();
         
         if (response.ok && data.status === 'success') {
-            // Remove hardcoded mock subscriptions
+            // Remove previous dynamic subs
             const oldSubs = engine4.querySelectorAll('.dynamic-sub');
             oldSubs.forEach(sub => sub.remove());
             
             const addForm = engine4.querySelector('div[style*="background: rgba(168, 85, 247, 0.05)"]');
             
             data.subscriptions.forEach(sub => {
+                // AI Cashback Logic
+                let cashback = 0;
+                if (sub.card_used.includes('Millennia') || sub.card_used.includes('Cashback')) {
+                    cashback = Math.round(sub.monthly_cost * 0.05);
+                } else if (sub.card_used.includes('BPCL') || sub.card_used.includes('Fuel')) {
+                    cashback = Math.round(sub.monthly_cost * 0.01);
+                } else {
+                    cashback = Math.round(sub.monthly_cost * 0.015);
+                }
+
                 const subHTML = `
                 <div class="dynamic-sub" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <div><h4 style="color: white; font-size: 1rem; margin-bottom: 4px;">${sub.service_name}</h4><p style="color: #64748b; font-size: 0.75rem;">Charged to: ${sub.card_used}</p></div>
                     <div style="text-align: right; display: flex; align-items: center; gap: 15px;">
-                        <div><div style="color: white; font-weight: bold; font-size: 1rem; margin-bottom: 2px;">₹${sub.monthly_cost} / mo</div></div>
-                        <span style="color: #64748b; cursor: pointer;" onclick="removeSubscription('${sub.service_name}', '${sub.card_used}')">🗑️</span>
+                        <div>
+                            <div style="color: white; font-weight: bold; font-size: 1rem; margin-bottom: 2px;">₹${sub.monthly_cost} / mo</div>
+                            <div style="color: #34D399; font-size: 0.75rem;">Earns ₹${cashback}/mo cashback (vs ₹0 on UPI)</div>
+                        </div>
+                        <span style="color: #64748b; cursor: pointer; font-size: 1.2rem;" onclick="removeSubscription('${sub.service_name}', '${sub.card_used}')">🗑️</span>
                     </div>
                 </div>`;
                 addForm.insertAdjacentHTML('beforebegin', subHTML);
